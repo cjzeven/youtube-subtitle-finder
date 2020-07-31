@@ -12,10 +12,17 @@
 </head>
 <body>
     <div id="app">
+        <setion id="navbar-app">
+            <nav class="navbar fixed-top navbar-light">
+                <a class="navbar-brand" v-bind:class="{'animated-navbar': !emptyData}" href="">Subtitle Finder</a>
+            </nav>
+        </setion>
+
         <section id="header-app" v-bind:class="{'animated-background': !emptyData}">
             <div class="container" v-bind:class="{'animated-foreground': !emptyData}">
                 <div class="row">
-                    <h1>Subtitle Finder</h1>
+                    <!-- <h1 class="animate__animated" v-bind:class="{'animate__fadeOutUp animate__slow': !emptyData}">Subtitle Finder</h1> -->
+                    <h1 id="header-title" v-bind:class="{'animated-header-title': !emptyData}">Subtitle Finder</h1>
                 </div>
                 <section class="button-search">
                     <div class="row mt-3 mb-3" v-if="formStageOne">
@@ -130,16 +137,16 @@
         </footer>
     </div>
 
-    <!-- Axios -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <!-- Vue -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <!-- Babel standalone -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
     <script>
         new Vue({
@@ -172,7 +179,12 @@
                         
                         if (result.status === 200) {
                             this.data = result.data.data;
-                            $('#header-app .container').addClass('animate__fadeInDown');
+                            // $('#header-app .container').addClass('animate__fadeInDown');
+                            // $('#header-app .container').on('animationend', function() {
+                                // $('#header-app h1').parent().addClass('d-none');
+
+                            // });
+
                         }
                         
                     } catch (error) {
@@ -180,6 +192,9 @@
                         console.log('ERR handleSearch', error);
                     }
 
+                },
+                scrollToBottom() {
+                    $("html, body").animate({ scrollTop: $(document).height() }, 1500);
                 }
             },
             mounted() {
