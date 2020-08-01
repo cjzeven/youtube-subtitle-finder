@@ -41,7 +41,7 @@ input, .list-group {
 }
 #header-app .container {
     margin-bottom: 2%;
-    margin-top: 25vh;
+    margin-top: 20vh;
     transition: all 1s ease;
 }
 .animated-foreground {
@@ -91,6 +91,7 @@ input, .list-group {
 }
 #body-app .list-group-item {
     padding-left: 0;
+    padding-right: 0;
 }
 #body-app .badge-pill a {
     color: #fff;
@@ -112,7 +113,61 @@ input, .list-group {
 .fade-enter-active, .fade-leave-active {
     transition: all .5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active di bawah versi 2.1.8 */ {
+.fade-enter, .fade-leave-to {
     opacity: 0;
     height: 0px;
 }
+#no-result {
+    font-family: sans-serif;
+}
+.input-group input:active {
+    border: 0px;
+    border-color: #fff;
+}
+.input-group input, .input-group button {
+    border: 0px !important;
+    border-radius: 0px !important;
+    background: #fff;
+}
+.input-group button:hover {
+    background-color: #fff;
+}
+.input-group button svg, #follow-me {
+    color: #0072ff
+}
+
+
+/* SPINNER */
+.spinner-wrapper {
+    width: 100%;
+    height: 100%;
+    display: table;
+    position: fixed;
+    z-index: 99999;
+    /* background-color: rgba(255, 255, 255, 1); */
+    background-image: linear-gradient(to right, #00c6ff, #0072ff);
+}
+.spinner-wrapper .spinner-border {
+    z-index: 99999;
+}
+
+.spinner-center {
+    padding: 0;
+    vertical-align: middle;
+    display: table-cell !important;
+    margin: 0;
+    text-align: center;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* END SPINNER */
