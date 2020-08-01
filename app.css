@@ -7,7 +7,8 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0;
 }
 body {
-    font-family: 'Dancing Script', sans-serif;
+    /* font-family: 'Dancing Script', sans-serif; */
+    font-family: sans-serif;
 }
 .badge-primary {
     background-image: linear-gradient(to right, #00c6ff, #0072ff) !important;
@@ -16,8 +17,11 @@ body {
     background-color: rgba(0, 146, 255, 0.3);
 }
 input, .list-group {
-    font-family: sans-serif;
     line-height: 1.2em;
+}
+.col-sm {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 #navbar-app nav {
     background-image: linear-gradient(to right, #00c6ff, #0072ff);
@@ -26,6 +30,7 @@ input, .list-group {
     color: #fff;
     opacity: 0;
     transition: .5s ease;
+    font-family: 'Dancing Script', sans-serif;
 }
 .animated-navbar {
     opacity: 1 !important;
@@ -46,18 +51,22 @@ input, .list-group {
 }
 .animated-foreground {
     margin-bottom: 2%;
-    margin-top: 0vh !important;
+    margin-top: 5vh !important;
 }
 #header-app .row {
     display: flex;
     justify-content: center;
 }
 #header-app h1 {
+    font-family: 'Dancing Script', sans-serif;
     font-size: 8em;
 }
 #header-app .button-search {
     width: 60%;
     margin: 0 auto;
+}
+#header-app button {
+    /* font-family: 'Dancing Script', sans-serif; */
 }
 #bottom-wave {
     width: 100%;
@@ -67,11 +76,10 @@ input, .list-group {
     margin-top: 3%;
 }
 #pagination-area .page-item {
-    padding: 8px;
+    padding: 7px;
 }
 #pagination-area a, #pagination-area p {
-    font-family: sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     border: 0px;
     padding: 0px;
 }
@@ -84,10 +92,13 @@ input, .list-group {
     background-color: #fff;
 }
 #pagination-area p {
-    font-size: 12px;
+    font-size: 13px;
 }
 #body-app {
     margin-top: 3%;
+}
+#body-app h1 {
+    font-family: 'Dancing Script', sans-serif;
 }
 #body-app .list-group-item {
     padding-left: 0;
@@ -118,7 +129,7 @@ input, .list-group {
     height: 0px;
 }
 #no-result {
-    font-family: sans-serif;
+
 }
 .input-group input:active {
     border: 0px;
@@ -132,10 +143,15 @@ input, .list-group {
 .input-group button:hover {
     background-color: #fff;
 }
-.input-group button svg, #follow-me {
+.input-group button svg, #follow-me a {
     color: #0072ff
 }
-
+#follow-me {
+    font-size: 13px;
+}
+#embed-youtube {
+    z-index: 9999999999;
+}
 
 /* SPINNER */
 .spinner-wrapper {
@@ -144,7 +160,6 @@ input, .list-group {
     display: table;
     position: fixed;
     z-index: 99999;
-    /* background-color: rgba(255, 255, 255, 1); */
     background-image: linear-gradient(to right, #00c6ff, #0072ff);
 }
 .spinner-wrapper .spinner-border {

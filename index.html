@@ -52,7 +52,7 @@
                         
                         <div key="keyword" class="row" v-if="formStageTwo">
                             <div class="input-group input-group-lg">
-                                <input type="text" class="form-control" placeholder="Keyword e.g. website" v-model="forms.keyword">
+                                <input id="keyword-input" type="text" class="form-control" placeholder="Keyword e.g. website" v-model="forms.keyword">
                                 <div class="input-group-append">
                                 <button class="btn btn-outline-light" type="button" @click="handleFormClear">
                                     <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -81,17 +81,14 @@
                             </svg>
                             Back 
                         </button>&nbsp;
-                        <button class="btn btn-outline-light header-button" v-if="formStageTwo" @click="handleSearch" :disabled="(emptyFormLink || emptyFormKeyword)">
-                            Search 
-                            &nbsp;<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" transform="scale(-1,1)" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
-                                <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
-                              </svg>
+                        <button class="btn btn-light header-button" v-if="formStageTwo" @click="handleSearch" :disabled="(emptyFormLink || emptyFormKeyword)">
+                            Search Now
                         </button>
                     </div>
 
                     <div class="row mt-3 justify-content-start">
-                        <p id="no-result" v-if="noResult">Did not match "{{ forms.keyword }}". Try another word!</p>
+                        <!-- <p id="no-result" v-if="error.status">Did not match "{{ forms.keyword }}". Try another word!</p> -->
+                        <p id="no-result" v-if="error.status" v-html="error.message"></p>
                     </div>
                     
 
@@ -111,7 +108,7 @@
                             <li class="list-group-item d-flex justify-content-between align-items-center" v-for="item in data">
                                 <span v-html="item.text"></span>
                                 <span class="badge badge-primary badge-pill">
-                                    <a href="javascript:;" @click="setVideoTime(item.start)">{{ converSecond(item.start) }}</a>
+                                    <a href="javascript:;" @click="setVideoTime(item.start)">{{ convertSecond(item.start) }}</a>
                                 </span>
                             </li>
                         </ul>
@@ -149,7 +146,7 @@
                     </div>
     
                     <div class="col-sm">
-                        <h1 class="text-center mb-4">Youtube Video</h1>
+                        <h1 class="text-center mb-4">Original Video</h1>
                         <div class="mt-3 embed-responsive embed-responsive-16by9">
                             <iframe class="embed-responsive-item" :src="getYoutubeLink" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
@@ -158,20 +155,20 @@
             </div>
         </section>
 
-        <footer v-if="!emptyData">
+        <footer class="mt-3 mr-5" v-if="!emptyData">
             <div class="container d-flex justify-content-end">
                 <div class="row">
-                    <p class="text-center">Follow me <a id="follow-me" href="https://www.linkedin.com/in/adentya" target="_blank">@adentya</a></p>
+                    <p id="follow-me" class="text-center">Follow me <a href="https://www.linkedin.com/in/adentya" target="_blank">@adentya</a></p>
                 </div>
             </div>
         </footer>
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="video-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Youtube Video</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Video start at {{ embedVideoTime }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -182,7 +179,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>
             </div>
@@ -206,7 +203,10 @@
             el: '#app',
             data: {
                 loading: true,
-                noResult: false,
+                error: {
+                    status: false,
+                    message: '',
+                },
                 url: 'https://cari-teks-video-api.vercel.app/api',
                 forms: {
                     stage: 1,
@@ -214,6 +214,7 @@
                     keyword: '',
                 },
                 embedLink: '',
+                embedVideoTime: '',
                 data: [],
                 totalData: 0,
                 currentPage: 1,
@@ -243,15 +244,25 @@
                     const {link, keyword} = this.forms;
 
                     this.loading = true;
+
+                    let data = [];
                     
                     try {
                         const result = await axios.get(`${this.url}/search?url=${link}&q=${keyword}`);
                         
                         if (result.status === 200) {
-                            if (result.data.data.length > 0) {
-                                this.noResult = false;
+                            if (result.data.output) {
+                                if (result.data.output.statusCode !== 200) {
+                                    this.error.status = true;
+                                    this.error.message = result.data.output.payload.message;
+                                    return;
+                                }
+                            } else if (result.data.data.length <= 0) {
+                                this.error.status = true;
+                                this.error.message = `Did not match "${keyword}". Try another word!`;
+                                return;
                             } else {
-                                this.noResult = true;
+                                this.error.status = false;
                             }
 
                             this.data = result.data.data;
@@ -267,15 +278,13 @@
                         }
                         
                     } catch (error) {
-                        alert(error);
+                        this.error.status = true;
+                        this.error.message = error;
                         console.log('ERR handleSearch', error);
                     } finally {
                         this.loading = false;
                     }
 
-                },
-                scrollToBottom() {
-                    $("html, body").animate({ scrollTop: $(document).height() }, 1500);
                 },
                 async handlePagination(page) {
                     const {link, keyword} = this.forms;
@@ -286,6 +295,16 @@
                         const result = await axios.get(`${this.url}/search?url=${link}&q=${keyword}&page=${page}`);
                         
                         if (result.status === 200) {
+                            if (result.data.output) {
+                                if (result.data.output.statusCode !== 200) {
+                                    this.error.status = true;
+                                    this.error.message = result.data.output.payload.message;
+                                    return;
+                                }
+                            } else {
+                                this.error.status = false;
+                            }
+
                             this.data = result.data.data;
                             this.rawData = result.data;
                             this.totalData = result.data.total;
@@ -313,8 +332,9 @@
                         }
                         
                     } catch (error) {
-                        alert(error);
-                        console.log('ERR handleSearch', error);
+                        this.error.status = true;
+                        this.error.message = error;
+                        console.log('ERR handlePagination', error);
                     } finally {
                         this.loading = false;
                     }
@@ -343,9 +363,11 @@
                         this.embedLink = `${this.forms.link}?start=${time}`;
                     }
 
-                    $('#exampleModal').modal();
+                    this.embedVideoTime = this.convertSecond(time);
+
+                    $('#video-modal').modal();
                 },
-                converSecond(seconds) {
+                convertSecond(seconds) {
                     const measuredTime = new Date(null);
                     measuredTime.setSeconds(seconds);
                     const formatted = measuredTime.toISOString().substr(11, 8);
@@ -360,11 +382,14 @@
                 this.loading = false;
 
                 // Stop youtube video when modal closed
-                $('#exampleModal').on('hidden.bs.modal', function (e) {
+                $('#video-modal').on('hidden.bs.modal', function (e) {
                     $('#embed-youtube')[0]
                         .contentWindow
                         .postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
                 });
+
+                // Focus on url input at first load
+                $('#link-input').focus();
             },
             computed: {
                 emptyFormLink() {
@@ -397,9 +422,19 @@
             },
             watch: {
                 forms: {
-                    handler() {
-                        if (this.noResult) {
-                            this.noResult = false;
+                    handler(val) {
+                        if (this.error.status) {
+                            this.error.status = false;
+                        }
+                        if (val.stage === 1) {
+                            setTimeout(() => {
+                                $('#link-input').focus();
+                            }, 100);
+                        }
+                        if (val.stage === 2) {
+                            setTimeout(() => {
+                                $('#keyword-input').focus();
+                            }, 100);
                         }
                     },
                     deep: true,
