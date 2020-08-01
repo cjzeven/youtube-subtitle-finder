@@ -9,6 +9,12 @@ h1, h2, h3, h4, h5, h6 {
 body {
     font-family: 'Dancing Script', sans-serif;
 }
+.badge-primary {
+    background-image: linear-gradient(to right, #00c6ff, #0072ff) !important;
+}
+.cvt-highlight {
+    background-color: rgba(0, 146, 255, 0.3);
+}
 input, .list-group {
     font-family: sans-serif;
     line-height: 1.2em;
@@ -60,11 +66,25 @@ input, .list-group {
 #pagination-area {
     margin-top: 3%;
 }
+#pagination-area .page-item {
+    padding: 8px;
+}
 #pagination-area a, #pagination-area p {
     font-family: sans-serif;
+    font-size: 12px;
+    border: 0px;
+    padding: 0px;
+}
+.page-item.active .page-link {
+    background-color: #fff;
+    color: #212529;
+    border-bottom: 1px solid black !important;
+}
+#pagination-area a:hover {
+    background-color: #fff;
 }
 #pagination-area p {
-    font-size: 14px;
+    font-size: 12px;
 }
 #body-app {
     margin-top: 3%;
