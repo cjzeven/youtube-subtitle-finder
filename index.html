@@ -6,69 +6,71 @@
     <title>Subtitle Finder</title>
     <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet"> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="./app.css">
 </head>
 <body>
     <div id="app">
-        <setion id="navbar-app">
+        <section id="navbar-app">
             <nav class="navbar fixed-top navbar-light">
                 <a class="navbar-brand" v-bind:class="{'animated-navbar': !emptyData}" href="">Subtitle Finder</a>
             </nav>
-        </setion>
+        </section>
 
         <section id="header-app" v-bind:class="{'animated-background': !emptyData}">
             <div class="container" v-bind:class="{'animated-foreground': !emptyData}">
                 <div class="row">
-                    <!-- <h1 class="animate__animated" v-bind:class="{'animate__fadeOutUp animate__slow': !emptyData}">Subtitle Finder</h1> -->
-                    <h1 id="header-title" v-bind:class="{'animated-header-title': !emptyData}">Subtitle Finder</h1>
+                    <h1 id="header-title" class="mb-3" v-bind:class="{'animated-header-title': !emptyData}">Subtitle Finder</h1>
                 </div>
                 <section class="button-search">
-                    <div class="row mt-3 mb-3" v-if="formStageOne">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Youtube link e.g. https://www.youtube.com/watch?v=klnvttPfOUM&q" v-model="forms.link">
-                            <div class="input-group-append">
-                              <button class="btn btn-outline-light" type="button" @click="handleFormClear">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                    <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
-                                    <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
-                                </svg>
-                              </button>
+                    <transition name="fade">
+                        <div key="link" class="row" v-if="formStageOne">
+                            <div class="input-group">
+                                <input id="link-input" type="text" class="form-control" placeholder="Youtube link e.g. https://www.youtube.com/watch?v=klnvttPfOUM&q" v-model="forms.link">
+                                <div class="input-group-append">
+                                <button class="btn btn-outline-light header-button" type="button" @click="handleFormClear">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                        <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
+                                        <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
+                                    </svg>
+                                </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mt-3 mb-3" v-if="formStageTwo">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Keyword e.g. webdev" v-model="forms.keyword">
-                            <div class="input-group-append">
-                              <button class="btn btn-outline-light" type="button" @click="handleFormClear">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                    <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
-                                    <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
-                                </svg>
-                              </button>
+                        
+                        <div key="keyword" class="row" v-if="formStageTwo">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Keyword e.g. webdev" v-model="forms.keyword">
+                                <div class="input-group-append">
+                                <button class="btn btn-outline-light" type="button" @click="handleFormClear">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                        <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
+                                        <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
+                                    </svg>
+                                </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <button class="btn btn-outline-light" @click="handleNext" v-if="formStageOne" :disabled="forms.link <= 0">
+                    </transition>
+
+                    <div class="row mt-3">
+                        <button class="btn btn-outline-light header-button" @click="handleNext" v-if="formStageOne" :disabled="forms.link <= 0">
                             Next 
                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M10.146 4.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L12.793 8l-2.647-2.646a.5.5 0 0 1 0-.708z"/>
                                 <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5H13a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8z"/>
                             </svg>
                         </button>
-                        <button class="btn btn-outline-light" @click="forms.stage = 1" v-if="formStageTwo" :disabled="forms.link <= 0">
+                        <button class="btn btn-outline-light header-button" @click="forms.stage = 1" v-if="formStageTwo" :disabled="forms.link <= 0">
                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/>
                                 <path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
                             </svg>
                             Back 
                         </button>&nbsp;
-                        <button class="btn btn-outline-light" v-if="formStageTwo" @click="handleSearch" :disabled="(emptyFormLink || emptyFormKeyword)">
+                        <button class="btn btn-outline-light header-button" v-if="formStageTwo" @click="handleSearch" :disabled="(emptyFormLink || emptyFormKeyword)">
                             Search 
                             &nbsp;<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" transform="scale(-1,1)" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
@@ -96,24 +98,34 @@
                             </li>
                         </ul>
     
-                        <section class="pagination-area d-flex align-items-center">
+                        <section id="pagination-area" class="d-flex align-items-center">
                             <nav class="flex-fill">
                                 <ul class="pagination pagination-sm">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                    <li class="page-item" :class="{'disabled': currentPage <= 1}">
+                                        <a class="page-link" href="javascript:;" tabindex="-1" aria-disabled="true" @click="handlePagination(1)">First</a>
                                     </li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item active" aria-current="page">
-                                        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                                    <li class="page-item" :class="{'disabled': currentPage <= 1}">
+                                        <a class="page-link" href="javascript:;" aria-label="Previous" @click="handlePagination(currentPage-1)">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
                                     </li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
+                                    <li v-for="(item, index) in totalPageNum" class="page-item" :class="{'active': currentPage == index+1}" v-if="checkRange(index+1)">
+                                        <a class="page-link" href="javascript:;" @click="handlePagination(index+1)">{{ (index + 1) }} 
+                                            <span class="sr-only" v-if="(index+1) == currentPage">(current)</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item" :class="{'disabled': currentPage >= totalPageNum}">
+                                        <a class="page-link" href="javascript:;" aria-label="Next" @click="handlePagination(currentPage+1)">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item" :class="{'disabled': currentPage >= totalPageNum}">
+                                        <a class="page-link" href="javascript:;" tabindex="-1" aria-disabled="true" @click="handlePagination(totalPageNum)">Last</a>
                                     </li>
                                 </ul>
                             </nav>
         
-                            <p>Total page: 229</p>
+                            <p class="total-page">Page {{ currentPage }} of {{ totalPageNum }}</p>
     
                         </section>
                     </div>
@@ -159,6 +171,12 @@
                     keyword: 'web',
                 },
                 data: [],
+                totalPage: 0,
+                currentPage: 1,
+                prevPage: null,
+                nextPage: null,
+                startNum: 1,
+                endNum: 10,
             },
             methods: {
                 handleNext() {
@@ -179,12 +197,10 @@
                         
                         if (result.status === 200) {
                             this.data = result.data.data;
-                            // $('#header-app .container').addClass('animate__fadeInDown');
-                            // $('#header-app .container').on('animationend', function() {
-                                // $('#header-app h1').parent().addClass('d-none');
-
-                            // });
-
+                            this.totalPage = result.data.total;
+                            this.currentPage = result.data.page;
+                            this.prevPage = result.data.prev;
+                            this.nextPage = result.data.next;
                         }
                         
                     } catch (error) {
@@ -195,6 +211,55 @@
                 },
                 scrollToBottom() {
                     $("html, body").animate({ scrollTop: $(document).height() }, 1500);
+                },
+                async handlePagination(page) {
+                    const {link, keyword} = this.forms;
+
+                    try {
+                        const result = await axios.get(`${this.url}/search?url=${link}&q=${keyword}&page=${page}`);
+                        
+                        if (result.status === 200) {
+                            this.data = result.data.data;
+                            this.totalPage = result.data.total;
+                            this.currentPage = result.data.page;
+                            this.prevPage = result.data.prev;
+                            this.nextPage = result.data.next;
+
+                            // handle first
+                            if (page == 1) {
+                                this.startNum = 1;
+                                this.endNum = 10;
+                            } 
+                            // handle prev
+                            else if (page < this.startNum) {
+                                this.startNum = this.startNum - 9;
+                                this.endNum = this.startNum + 9;
+                            } 
+                            // handle last
+                            else if (page == this.totalPageNum) {
+                                this.startNum = this.totalPageNum - (this.totalPageNum % 10);
+                                this.endNum = this.totalPageNum;
+                            }
+                        }
+                        
+                    } catch (error) {
+                        alert(error);
+                        console.log('ERR handleSearch', error);
+                    }
+                },
+                checkRange(page) {
+                    let range = [];
+
+                    if (this.currentPage % 10 === 0) {
+                        this.startNum = this.currentPage;
+                        this.endNum = this.currentPage + 10;
+                    }
+
+                    for (let i = this.startNum; i <= this.endNum; i++) {
+                        range.push(i);
+                    }
+
+                    return range.includes(page);
                 }
             },
             mounted() {
@@ -215,6 +280,12 @@
                 },
                 emptyData() {
                     return this.data.length <= 0;
+                },
+                limitPerPage() {
+                    return 10;
+                },
+                totalPageNum() {
+                    return Math.ceil(this.totalPage / 10);
                 }
             }
         });
