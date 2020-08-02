@@ -4,7 +4,7 @@
 }
 
 body {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Noto Sans HK', sans-serif;
 }
 
 input {
@@ -50,7 +50,11 @@ input {
 }
 
 .container__medium {
-    width: 80%;
+    width: 90%;
+}
+
+.header__input {
+    font-weight: 600;
 }
 
 .header__input-clear-btn {
@@ -90,6 +94,11 @@ input {
 
 .content__title {
     font-family: 'Dancing Script', sans-serif;
+    margin-bottom: 20px;
+}
+
+.content__list {
+    border-top: 1px solid #e3e3e3;
 }
 
 .content__list-item {
@@ -143,12 +152,16 @@ input {
     transition: all .7s ease-in;
 }
 
+.header__container--small {
+    width: 50%;
+}
+
 .header__bottom {
-    transition: all .7s ease-out;
+    transition: all .7s ease;
 }
 
 .header__bottom--transition {
-    padding-top: 5vh;
+    padding-top: 7vh;
 }
 
 .container--transition {
@@ -163,6 +176,33 @@ input {
     height: 0;
     opacity: 0;
     z-index: -9;
+}
+
+.col-md--top {
+    z-index: 9;
+}
+
+.col-md--bottom {
+    z-index: -9;
+}
+
+.custom-blue {
+    background-color: #3ea9ff;
+    color: #fff;
+}
+
+.custom-blue:hover {
+    color: #fff;
+    background-color: #0072ff;
+}
+
+.content__pagination .page-item.active .page-link {
+    background-color: #3ea9ff;
+    border-color: #3ea9ff;
+}
+
+.cvt-highlight {
+    background-color: #e3ebfc !important;
 }
 
 /* Loading indicator */
