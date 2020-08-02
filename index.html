@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Subtitle Finder</title>
+        <title>Subtitle Finder &nbsp;❤️</title>
         <!-- CSS only -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet"> 
@@ -86,7 +86,7 @@
     
         <section class="content mt-5" v-if="renderData">
             <div class="container">
-                <div class="row">
+                <div class="row content__row">
                     <div class="col-md clear-x mr-3">
                         <h1 class="content__title text-center">Results {{ totalData }} Items</h1>
                         <section class="content__main">
@@ -114,7 +114,7 @@
                                                 </a>
                                             </li>
                                             <li 
-                                                class="page-item" 
+                                                class="page-item pagination__item" 
                                                 :class="{'active': pagination.currentPage == (index+1)}" 
                                                 v-for="(item, index) in totalPagination" 
                                                 v-if="checkRange(index+1)"
@@ -374,15 +374,13 @@
                             this.error.show = false;
                         }
 
-                        if (!this.error.show) {
-                            this.data = result.data.data ? result.data.data : [];
-                            this.totalData = result.data.total;
-                            this.pagination.currentPage = result.data.page;
-                            this.pagination.prevPage = result.data.prev;
-                            this.pagination.nextPage = result.data.next;
-                            this.pagination.startNum = 1;
-                            this.pagination.endNum = this.dataPerPage;
-                        }
+                        this.data = result.data.data ? result.data.data : [];
+                        this.totalData = result.data.total;
+                        this.pagination.currentPage = result.data.page;
+                        this.pagination.prevPage = result.data.prev;
+                        this.pagination.nextPage = result.data.next;
+                        this.pagination.startNum = 1;
+                        this.pagination.endNum = this.dataPerPage;
                     }
                     
                 } catch (error) {

@@ -230,3 +230,59 @@ input {
     height: 0px;
 }
 /* End vue fade transition */
+
+@media screen and (max-width: 1024px) {
+    .header__title {
+        height: auto;
+        font-size: 3rem;
+    }
+
+    .header__container--small {
+        width: 100%;
+    }
+
+    .header__row, .content__row {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .content__row .mr-3, .content__row .ml-3 {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .footer .clear-x {
+        padding: 15px;
+    }
+
+    .pagination__item {
+        display: none;
+    }
+
+    .content__pagination {
+        display: inline-block;
+    }
+
+    .content__pagination a, .content__page-info {
+        font-size: 1rem !important;
+    }
+
+    .content__bottom {
+        text-align: center;
+    }
+
+    .col-md--bottom {
+        text-align: center !important;
+    }
+
+    .content__title {
+        margin-top: 30px;
+    }
+
+}
+
+@media screen and (width: 1024px) {
+    .content__row .col-md {
+        margin: 10px !important;
+    }
+}
