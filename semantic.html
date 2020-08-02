@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Subtitle Finder</title>
+        <!-- CSS only -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="./main.css">
+    </head>
+<body>
+
+    <div id="app">
+
+        <div v-if="loading" class="spinner">
+            <div class="spinner__wrapper spinner--wrapper-center">
+                <div class="spinner-grow text-primary spinner-grow-sm" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-warning spinner-grow-sm" role="status"></div>
+                <div class="spinner-grow text-danger spinner-grow-sm" role="status"></div>
+            </div>
+        </div>
+
+        <nav class="navbar fixed-top navbar-light bg-light navbar--background">
+            <a class="navbar-brand navbar__brand" href="#">Subtitle Finder</a>
+        </nav>
+    
+        <header class="header header--background">
+            <div class="container header__container container__medium">
+                <div class="row header__row">
+                    
+                    <h1 class="header__title">Subtitle Finder</h1>
+
+                    <form class="header__form" @submit.prevent>
+                        <transition name="fade">
+                            <div key="link" class="input-group input-group-lg" v-if="stageOne">
+                                <input type="text" class="form-control header__input" placeholder="Youtube link..." aria-label="Youtube link..." aria-describedby="clear-link-button" v-model="searchForm.link">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary header__input-clear-btn" type="button" id="clear-link-button" @click="handleFormClear">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
+                                            <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div key="keyword" class="input-group input-group-lg" v-if="stageTwo">
+                                <input type="text" class="form-control header__input" placeholder="Keyword e.g. website" aria-label="Keyword e.g. website" aria-describedby="clear-keyword-button" v-model="searchForm.keyword">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary header__input-clear-btn" type="button" id="clear-keyword-button" @click="handleFormClear">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
+                                            <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </transition>
+                        <div class="mt-3 text-center header__buttons">
+                            <button type="button" class="btn btn-outline-light header__buttons-item" v-if="stageOne" @click="handleNext">
+                                Next
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10.146 4.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L12.793 8l-2.647-2.646a.5.5 0 0 1 0-.708z"/>
+                                    <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5H13a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8z"/>
+                                </svg>
+                            </button>
+                            <button type="button" class="btn btn-outline-light header__buttons-item" v-if="stageTwo" @click="handleBack">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"/>
+                                    <path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                                </svg>
+                                Back
+                            </button>
+                            <button type="submit" class="btn btn-light header__buttons-item" v-if="stageTwo" @click="handleSearch">
+                                Search Now
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+    
+            <div class="header__bottom mt-5">
+                <img class="header__bottom-background" src="./images/wave.png" alt="bottom-background">
+            </div>
+    
+        </header>
+    
+        <section class="content mt-5 d-none">
+            <div class="container container__medium">
+                <div class="row">
+                    <div class="col-md clear-x mr-3">
+                        <h1 class="content__title text-center">Results 229 Items</h1>
+                        <section class="content__main">
+                            <ul class="list-group list-group-flush content__list">
+                                <li class="list-group-item d-flex justify-content-between align-items-center content__list-item">
+                                    Cras justo odio 
+                                    <span class="badge badge-primary clear-xy">
+                                        <button class="btn btn-primary btn-sm content__time-btn">14:00</button>
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center content__list-item">
+                                    Cras justo odio 
+                                    <span class="badge badge-primary clear-xy">
+                                        <button class="btn btn-primary btn-sm content__time-btn">14:00</button>
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center content__list-item">
+                                    Cras justo odio 
+                                    <span class="badge badge-primary clear-xy">
+                                        <button class="btn btn-primary btn-sm content__time-btn">14:00</button>
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center content__list-item">
+                                    Cras justo odio 
+                                    <span class="badge badge-primary clear-xy">
+                                        <button class="btn btn-primary btn-sm content__time-btn">14:00</button>
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center content__list-item">
+                                    Cras justo odio 
+                                    <span class="badge badge-primary clear-xy">
+                                        <button class="btn btn-primary btn-sm content__time-btn">14:00</button>
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center content__list-item">
+                                    Cras justo odio 
+                                    <span class="badge badge-primary clear-xy">
+                                        <button class="btn btn-primary btn-sm content__time-btn">14:00</button>
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center content__list-item">
+                                    Cras justo odio 
+                                    <span class="badge badge-primary clear-xy">
+                                        <button class="btn btn-primary btn-sm content__time-btn">14:00</button>
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center content__list-item">
+                                    Cras justo odio 
+                                    <span class="badge badge-primary clear-xy">
+                                        <button class="btn btn-primary btn-sm content__time-btn">14:00</button>
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center content__list-item">
+                                    Cras justo odio 
+                                    <span class="badge badge-primary clear-xy">
+                                        <button class="btn btn-primary btn-sm content__time-btn">14:00</button>
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center content__list-item">
+                                    Cras justo odio 
+                                    <span class="badge badge-primary clear-xy">
+                                        <button class="btn btn-primary btn-sm content__time-btn">14:00</button>
+                                    </span>
+                                </li>
+                              </ul>
+                        </section>
+                        <section class="content__bottom mt-2">
+                            <div class="row">
+                                <div class="col-md">
+                                    <nav class="content__pagination" aria-label="Content pagination">
+                                        <ul class="pagination pagination-sm">
+                                          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                          <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                          <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                          <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                          <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                                <div class="col-md-3 text-right">
+                                    <span class="content__page-info align-middle">Page 1 of 20</span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-md clear-x ml-3">
+                        <h1 class="content__title text-center">Original Video</h1>
+                            <section class="mt-3 embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/klnvttPfOUM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <footer class="footer mt-3 d-none">
+            <div class="container container__medium">
+                <div class="row">
+                    <div class="col-sm">
+                        <p class="footer__follow text-right">Follow me <a href="#" target="_blank">@adentya</a></p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <!-- Babel standalone -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</body>
+</html>
+
+<script type="text/babel">
+    new Vue({
+        el: '#app',
+        data: {
+            loading: true,
+            error: {
+                show: false,
+                message: '',
+            },
+            url: 'https://cari-teks-video-api.vercel.app/api',
+            searchForm: {
+                stage: 1,
+                link: 'https://www.youtube.com/watch?v=klnvttPfOUM',
+                keyword: 'people',
+            },
+            data: [],
+            totalData: 0,
+            pagination: {
+                currentPage: 1,
+                prevPage: null,
+                nextPage: null,
+                startNum: 1,
+                endNum: 10,
+            }
+        },
+        methods: {
+            handleNext() {
+                this.searchForm.stage = 2;
+            },
+            handleBack() {
+                this.searchForm.stage = 1
+                this.data = [];
+                this.searchForm.keyword = '';
+            },
+            handleFormClear() {
+                if (this.stageOne) {
+                    this.searchForm.link = '';
+                } else if (this.stageTwo) {
+                    this.searchForm.keyword = '';
+                }
+            },
+            async handleSearch() {
+                const {link, keyword} = this.searchForm;
+
+                this.loading = true;
+
+                try {
+                    const result = await axios.get(`${this.url}/search?url=${link}&q=${keyword}`);
+                    
+                    if (result.status === 200) {
+                        if (result.data.output) {
+                            if (result.data.output.statusCode !== 200) {
+                                this.error.show = true;
+                                this.error.message = result.data.output.payload.message;
+                                return;
+                            }
+                        } else if (result.data.data.length <= 0) {
+                            this.error.show = true;
+                            this.error.message = `Did not match "${keyword}". Try another word!`;
+                            return;
+                        } else {
+                            this.error.show = false;
+                        }
+
+                        this.data = result.data.data;
+                        this.totalData = result.data.total;
+                        this.pagination.currentPage = result.data.page;
+                        this.pagination.prevPage = result.data.prev;
+                        this.pagination.nextPage = result.data.next;
+                        this.pagination.startNum = 1;
+                        this.pagination.endNum = this.dataPerPage;
+
+                    }
+                    
+                } catch (error) {
+                    this.error.show = true;
+                    this.error.message = error;
+                    console.log('ERR handleSearch', error);
+                } finally {
+                    setTimeout(() => {
+                        this.loading = false;
+                    }, 5000);
+                }
+
+            },
+        },
+        mounted() {
+            this.loading = false;
+
+        },
+        computed: {
+            stageOne() {
+                return this.searchForm.stage === 1;
+            },
+            stageTwo() {
+                return this.searchForm.stage === 2;
+            },
+            dataPerPage() {
+                return 10;
+            },
+        },
+        watch: {
+            loading(loading) {
+                // Initial transition for header
+                if (!loading && this.searchForm.stage === 1) {
+                    setTimeout(() => {
+                        const headerContainer = $('.header__container');
+                        const headerBottom = $('.header__bottom');
+
+                        headerContainer.addClass('container--transition');
+                        headerContainer.on('transitionend', () => {
+                            headerBottom.addClass('header__bottom--transition');
+                        });
+                    }, 1);
+                }
+
+                // Transition for header to back to initial
+                if (!loading && this.searchForm.stage === 2) {
+                    setTimeout(() => {
+                        const headerContainer = $('.header__container');
+                        const headerBottom = $('.header__bottom');
+                        const navbarBrand = $('.navbar__brand');
+                        const headerTitle = $('.header__title');
+
+                        headerContainer.removeClass('container--transition');
+                        headerContainer.on('transitionend', () => {
+                            headerBottom.removeClass('header__bottom--transition');
+                            navbarBrand.addClass('navbar__brand--transition');
+                            headerTitle.addClass('header__title--transition');
+                        });
+                    }, 1);
+                }
+            }
+        }
+    });
+</script>
