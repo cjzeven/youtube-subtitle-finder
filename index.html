@@ -354,14 +354,12 @@
             async handleSearch() {
                 const {link, keyword} = this.searchForm;
 
-                if (!this.validateUrl(link)) {
-                    this.searchForm.link = '';
-                }
-
                 this.loading = true;
 
                 try {
                     const result = await axios.get(`${this.url}/search?url=${link}&q=${keyword}`);
+
+                    this.searchForm.link = this.validateUrl(link) ? link : '';
                     
                     if (result.status === 200) {
                         if (result.data.output) {
@@ -431,7 +429,9 @@
             },
         },
         mounted() {
-            this.loading = false;
+            setTimeout(() => {
+                this.loading = false;
+            }, 1500);
 
             // Stop youtube video when modal closed
             $('#video-modal').on('hidden.bs.modal', function (e) {
