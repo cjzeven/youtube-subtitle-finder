@@ -25,11 +25,11 @@
         </div>
 
         <nav class="navbar fixed-top navbar-light bg-light navbar--background">
-            <a class="navbar-brand navbar__brand" href="#">Subtitle Finder</a>
+            <a class="navbar-brand navbar__brand" href="javascript:;" @click="handleBack">Subtitle Finder</a>
         </nav>
     
         <header class="header header--background">
-            <div class="container header__container container__medium header__container--small">
+            <div class="container header__container header__container--small">
                 <div class="row header__row">
                     
                     <h1 class="header__title mb-3">Subtitle Finder</h1>
@@ -37,7 +37,7 @@
                     <form class="header__form" @submit.prevent>
                         <transition name="fade">
                             <div key="link" class="input-group input-group-lg" v-if="stageOne">
-                                <input type="text" class="form-control header__input" placeholder="Youtube link..." aria-label="Youtube link..." aria-describedby="clear-link-button" v-model="searchForm.link">
+                                <input type="text" class="form-control header__input" placeholder="Youtube link..." aria-label="Youtube link..." aria-describedby="clear-link-button" v-model="searchForm.link" id="input-link">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary header__input-clear-btn" type="button" id="clear-link-button" @click="handleFormClear">
                                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -49,7 +49,7 @@
                                 </div>
                             </div>
                             <div key="keyword" class="input-group input-group-lg" v-if="stageTwo">
-                                <input type="text" class="form-control header__input" placeholder="Keyword e.g. website" aria-label="Keyword e.g. website" aria-describedby="clear-keyword-button" v-model="searchForm.keyword">
+                                <input type="text" class="form-control header__input" placeholder="Keyword e.g. website" aria-label="Keyword e.g. website" aria-describedby="clear-keyword-button" v-model="searchForm.keyword" id="input-keyword">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary header__input-clear-btn" type="button" id="clear-keyword-button" @click="handleFormClear">
                                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -85,25 +85,26 @@
         </header>
     
         <section class="content mt-5" v-if="renderData">
-            <div class="container container__medium">
+            <div class="container">
                 <div class="row">
                     <div class="col-md clear-x mr-3">
                         <h1 class="content__title text-center">Results {{ totalData }} Items</h1>
                         <section class="content__main">
-                            <ul class="list-group list-group-flush content__list">
+                            <ul class="list-group list-group-flush content__list" v-if="!emptyData">
                                 <li class="list-group-item d-flex justify-content-between align-items-center content__list-item" v-for="item in data">
-                                    <p class="clear-y" v-html="item.text"></p> 
+                                    <p class="clear-y mr-1" v-html="item.text"></p> 
                                     <span class="badge badge-primary clear-xy">
                                         <button class="btn btn-primary btn-sm content__time-btn" @click="handleVideoPlayer(item.start)">{{ convertSecond(item.start) }}</button>
                                     </span>
                                 </li>
-                              </ul>
+                            </ul>
+                            <div v-if="(emptyData && error.show)" v-html="error.message" class="text-center"></div>
                         </section>
-                        <section class="content__bottom mt-3">
+                        <section class="content__bottom mt-3" v-if="!emptyData">
                             <div class="row">
                                 <div class="col-md col-md--top">
                                     <nav class="content__pagination" aria-label="Content pagination">
-                                        <ul class="pagination pagination-sm">
+                                        <ul class="pagination pagination-sm clear-y">
                                             <li class="page-item" :class="{'disabled': pagination.currentPage <= 1}">
                                                 <a class="page-link" href="javascript:;" @click="handlePagination(1)">First</a>
                                             </li>
@@ -143,7 +144,10 @@
                     </div>
                     <div class="col-md clear-x ml-3">
                         <h1 class="content__title text-center">Original Video</h1>
-                            <section class="embed-responsive embed-responsive-16by9">
+                            <section 
+                                class="embed-responsive embed-responsive-16by9" 
+                                v-if="searchForm.link.length > 0"
+                            >
                                 <iframe class="embed-responsive-item" :src="convertYoutubeLink(searchForm.link)" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </section>
                     </div>
@@ -152,9 +156,9 @@
         </section>
     
         <footer class="footer mt-3" v-if="renderData">
-            <div class="container container__medium">
+            <div class="container">
                 <div class="row">
-                    <div class="col-sm">
+                    <div class="col-sm clear-x">
                         <p class="footer__follow text-right">Follow me <a href="https://www.linkedin.com/in/adentya" target="_blank">@adentya</a></p>
                     </div>
                 </div>
@@ -233,16 +237,30 @@
         methods: {
             handleNext() {
                 this.searchForm.stage = 2;
+
+                setTimeout(() => {
+                    $('#input-keyword').focus();
+                }, 1);
             },
             handleBack() {
                 this.searchForm.stage = 1
                 this.headerTransitionStart();
+
+                setTimeout(() => {
+                    $('#input-link').focus();
+                }, 1);
             },
             handleFormClear() {
                 if (this.stageOne) {
                     this.searchForm.link = '';
+                    setTimeout(() => {
+                        $('#input-link').focus();
+                    }, 1);
                 } else if (this.stageTwo) {
                     this.searchForm.keyword = '';
+                    setTimeout(() => {
+                        $('#input-keyword').focus();
+                    }, 1);
                 }
             },
             convertSecond(seconds) {
@@ -284,6 +302,8 @@
             async handlePagination(page) {
                 const {link, keyword} = this.searchForm;
 
+                this.loading = true;
+
                 try {
                     const result = await axios.get(`${this.url}/search?url=${link}&q=${keyword}&page=${page}`);
                     
@@ -292,34 +312,34 @@
                             if (result.data.output.statusCode !== 200) {
                                 this.error.show = true;
                                 this.error.message = result.data.output.payload.message;
-                                return;
                             }
                         } else {
                             this.error.show = false;
                         }
 
-                        this.data = result.data.data;
-                        this.totalData = result.data.total;
-                        this.pagination.currentPage = result.data.page;
-                        this.pagination.prevPage = result.data.prev;
-                        this.pagination.nextPage = result.data.next;
+                        if (!this.error.show) {
+                            this.data = result.data.data ? result.data.data : [];
+                            this.totalData = result.data.total;
+                            this.pagination.currentPage = result.data.page;
+                            this.pagination.prevPage = result.data.prev;
+                            this.pagination.nextPage = result.data.next;
 
-                        // handle first
-                        if (page == 1) {
-                            this.pagination.startNum = 1;
-                            this.pagination.endNum = this.dataPerPage;
-                        } 
-                        // handle prev
-                        else if (page < this.pagination.startNum) {
-                            this.pagination.startNum = this.pagination.startNum - (this.dataPerPage-1);
-                            this.pagination.endNum = this.pagination.startNum + (this.dataPerPage-1);
-                        } 
-                        // handle last
-                        else if (page == this.totalPagination) {
-                            this.pagination.startNum = this.totalPagination - (this.totalPagination % this.dataPerPage);
-                            this.pagination.endNum = this.totalPagination;
+                            // handle first
+                            if (page == 1) {
+                                this.pagination.startNum = 1;
+                                this.pagination.endNum = this.dataPerPage;
+                            } 
+                            // handle prev
+                            else if (page < this.pagination.startNum) {
+                                this.pagination.startNum = this.pagination.startNum - (this.dataPerPage-1);
+                                this.pagination.endNum = this.pagination.startNum + (this.dataPerPage-1);
+                            } 
+                            // handle last
+                            else if (page == this.totalPagination) {
+                                this.pagination.startNum = this.totalPagination - (this.totalPagination % this.dataPerPage);
+                                this.pagination.endNum = this.totalPagination;
+                            }
                         }
-
                     }
                     
                 } catch (error) {
@@ -327,12 +347,16 @@
                     this.error.message = error;
                     console.log('ERR handlePagination', error);
                 } finally {
-
+                    this.loading = false;
                 }
             },
             // End pagination stuff
             async handleSearch() {
                 const {link, keyword} = this.searchForm;
+
+                if (!this.validateUrl(link)) {
+                    this.searchForm.link = '';
+                }
 
                 this.loading = true;
 
@@ -344,24 +368,23 @@
                             if (result.data.output.statusCode !== 200) {
                                 this.error.show = true;
                                 this.error.message = result.data.output.payload.message;
-                                return;
                             }
                         } else if (result.data.data.length <= 0) {
                             this.error.show = true;
                             this.error.message = `Did not match "${keyword}". Try another word!`;
-                            return;
                         } else {
                             this.error.show = false;
                         }
 
-                        this.data = result.data.data;
-                        this.totalData = result.data.total;
-                        this.pagination.currentPage = result.data.page;
-                        this.pagination.prevPage = result.data.prev;
-                        this.pagination.nextPage = result.data.next;
-                        this.pagination.startNum = 1;
-                        this.pagination.endNum = this.dataPerPage;
-
+                        if (!this.error.show) {
+                            this.data = result.data.data ? result.data.data : [];
+                            this.totalData = result.data.total;
+                            this.pagination.currentPage = result.data.page;
+                            this.pagination.prevPage = result.data.prev;
+                            this.pagination.nextPage = result.data.next;
+                            this.pagination.startNum = 1;
+                            this.pagination.endNum = this.dataPerPage;
+                        }
                     }
                     
                 } catch (error) {
@@ -369,9 +392,7 @@
                     this.error.message = error;
                     console.log('ERR handleSearch', error);
                 } finally {
-                    setTimeout(() => {
-                        this.loading = false;
-                    }, 3000);
+                    this.loading = false;
                 }
 
             },
@@ -404,12 +425,13 @@
 
                     this.renderData = true;
                 });
-            }
+            },
+            validateUrl(value) {
+                return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(value);
+            },
         },
         mounted() {
-            setTimeout(() => {
-                this.loading = false;
-            }, 1000);
+            this.loading = false;
 
             // Stop youtube video when modal closed
             $('#video-modal').on('hidden.bs.modal', function (e) {
@@ -417,6 +439,11 @@
                     .contentWindow
                     .postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
             });
+
+            // Focus on input in first load
+            setTimeout(() => {
+                $('#input-link').focus();
+            }, 1);
 
         },
         computed: {
@@ -437,6 +464,9 @@
             },
             emptyKeyword() {
                 return this.searchForm.keyword.length <= 0;
+            },
+            emptyData() {
+                return this.data.length <= 0
             },
         },
         watch: {

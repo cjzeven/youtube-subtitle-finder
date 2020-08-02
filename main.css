@@ -49,14 +49,6 @@ input {
     width: 100%;
 }
 
-.container__medium {
-    width: 90%;
-}
-
-.header__input {
-    font-weight: 600;
-}
-
 .header__input-clear-btn {
     border-color: #fff;
     background-color: #fff;
@@ -202,7 +194,7 @@ input {
 }
 
 .cvt-highlight {
-    background-color: #e3ebfc !important;
+    background-color: #e3f4fc !important;
 }
 
 /* Loading indicator */
