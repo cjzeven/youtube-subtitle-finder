@@ -317,28 +317,26 @@
                             this.error.show = false;
                         }
 
-                        if (!this.error.show) {
-                            this.data = result.data.data ? result.data.data : [];
-                            this.totalData = result.data.total;
-                            this.pagination.currentPage = result.data.page;
-                            this.pagination.prevPage = result.data.prev;
-                            this.pagination.nextPage = result.data.next;
+                        this.data = result.data.data ? result.data.data : [];
+                        this.totalData = result.data.total;
+                        this.pagination.currentPage = result.data.page;
+                        this.pagination.prevPage = result.data.prev;
+                        this.pagination.nextPage = result.data.next;
 
-                            // handle first
-                            if (page == 1) {
-                                this.pagination.startNum = 1;
-                                this.pagination.endNum = this.dataPerPage;
-                            } 
-                            // handle prev
-                            else if (page < this.pagination.startNum) {
-                                this.pagination.startNum = this.pagination.startNum - (this.dataPerPage-1);
-                                this.pagination.endNum = this.pagination.startNum + (this.dataPerPage-1);
-                            } 
-                            // handle last
-                            else if (page == this.totalPagination) {
-                                this.pagination.startNum = this.totalPagination - (this.totalPagination % this.dataPerPage);
-                                this.pagination.endNum = this.totalPagination;
-                            }
+                        // handle first
+                        if (page == 1) {
+                            this.pagination.startNum = 1;
+                            this.pagination.endNum = this.dataPerPage;
+                        } 
+                        // handle prev
+                        else if (page < this.pagination.startNum) {
+                            this.pagination.startNum = this.pagination.startNum - (this.dataPerPage-1);
+                            this.pagination.endNum = this.pagination.startNum + (this.dataPerPage-1);
+                        } 
+                        // handle last
+                        else if (page == this.totalPagination) {
+                            this.pagination.startNum = this.totalPagination - (this.totalPagination % this.dataPerPage);
+                            this.pagination.endNum = this.totalPagination;
                         }
                     }
                     
