@@ -231,7 +231,7 @@ input {
 }
 /* End vue fade transition */
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1023px) {
     .header__title {
         height: auto;
         font-size: 3rem;
@@ -279,10 +279,8 @@ input {
         margin-top: 30px;
     }
 
-}
-
-@media screen and (width: 1024px) {
     .content__row .col-md {
         margin: 10px !important;
     }
+
 }
