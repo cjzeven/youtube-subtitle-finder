@@ -1,6 +1,8 @@
 # Youtube Subtitle Finder
 Aplikasi sederhana untuk mencari kata dalam subtitle youtube.
 
+Lihat demo [disini](https://wonderful-fermi-a49807.netlify.app/).
+
 ## Pustaka
 Dibangun menggunakan HTML & JavaScript, termasuk didalamnya beberapa pustaka tambahan seperti:
 
